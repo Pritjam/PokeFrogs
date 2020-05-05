@@ -1,0 +1,22 @@
+import java.lang.Math;
+
+class CommandParser {
+  
+  public CommandParser() {
+  
+  }
+  
+  public String getCommand(String input) {
+    String command = input.toUpperCase().split(" ")[0];
+    return command;
+  }
+  
+  public int[] getArgs(String input) {
+    String[] tokens = input.split(" ");
+    int[] args = new int[tokens.length - 1];
+    for (int i = 1; i < tokens.length; i++) {
+      args[i-1] = Integer.parseInt(tokens[i]);
+    }
+    return args;
+  }
+}
