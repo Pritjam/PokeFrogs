@@ -1,11 +1,11 @@
 import java.lang.Math;
 
 public class Parser {
-  
+
   public Parser() {
-    
+
   }
-  
+
   public int[] parsePheno(int[] phenoView) {
     int[] gametes = new int[4];
     int i = 0;
@@ -16,12 +16,12 @@ public class Parser {
     }
     return gametes;
   }
-  
+
   public String getCommand(String input) {
     String command = input.toUpperCase().split(" ")[0];
     return command;
   }
-  
+
   public int[] getIntArgs(String input) {
     String[] tokens = input.split(" ");
     int[] args = new int[tokens.length - 1];
@@ -31,13 +31,12 @@ public class Parser {
     }
     return args;
   }
-  
+
   public int[] getClrArgs(String input) {
     String[] tokens = input.toUpperCase().split(" ");
-    int[] args = new int[tokens.length - 1];
-    String command = tokens[0].toUpperCase();
-    for (int i = 1; i < tokens.length; i++) {
-      args[i-1] = Constants.colorsList.indexOf(tokens[i]);
+    int[] args = new int[tokens.length];
+    for (int i = 0; i < tokens.length; i++) {
+      args[i] = Constants.colorsList.indexOf(tokens[i]);
     }
     return args;
   }
