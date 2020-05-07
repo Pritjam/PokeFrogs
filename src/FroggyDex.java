@@ -38,9 +38,9 @@ public class FroggyDex implements Serializable{
     frogs[base][acc] = true;
   }
   
-  public void saveSystemVars (int money, int dex) {
+  public void saveSystemVars (int money, int feed) {
     systemVars[0] = money;
-    systemVars[1] = dex;
+    systemVars[1] = feed;
   }
   
 }

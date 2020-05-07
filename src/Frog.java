@@ -4,7 +4,7 @@ import java.io.Serializable;
 public class Frog implements Serializable {
   int[] baseColors;
   int[] accColors;
-  int shiny;
+  boolean shiny;
   int maturity;
   String nickname;
   
@@ -12,9 +12,9 @@ public class Frog implements Serializable {
     baseColors = new int[2];
     accColors = new int[2];
     if(((int) (Math.random() * 50)) == 42) {
-      shiny = 1;
+      shiny = true;
     }
-    else { shiny = 0; }
+    else { shiny = false; }
     maturity = 0;
     baseColors[0] = alleles[0];
     baseColors[1] = alleles[1];
@@ -27,10 +27,10 @@ public class Frog implements Serializable {
     accColors = new int[2];
     
     if(((int) (Math.random() * 50)) == 42) {
-      shiny = 1;
+      shiny = true;
     }
     
-    else { shiny = 0; }
+    else { shiny = false; }
     maturity = 3;
     baseColors[0] = color;
     baseColors[1] = color;
@@ -80,8 +80,6 @@ public class Frog implements Serializable {
     return gametes;
   }
   
-  
-  
   public String[] getPhenotype() {
     String[] phenotype = new String[3];
     String phenotypeString = "";
@@ -100,4 +98,7 @@ public class Frog implements Serializable {
     return phenotype;
   }
   
+  public boolean getShiny() {
+    return this.shiny;
+  }
 }

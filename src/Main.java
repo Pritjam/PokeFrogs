@@ -80,7 +80,11 @@ public class Main {
         case "VIEW":
           System.out.println("Current Box: " + currentBox);
           for (int i = 0; i < boxes.getBoxSize(currentBox); i++) {
-            System.out.println(i + ": " + boxes.getFrog(currentBox, i).getPhenotype()[0] + ", Maturity: " + boxes.getFrog(currentBox, i).getMaturity());
+            System.out.print(i + ": " + boxes.getFrog(currentBox, i).getPhenotype()[0] + ", Maturity: " + boxes.getFrog(currentBox, i).getMaturity());
+            if(boxes.getFrog(currentBox, i).getShiny()) {
+              System.out.println(" * ");
+            }
+            else{System.out.println();}
           }
           break;
 
