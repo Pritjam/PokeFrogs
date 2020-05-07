@@ -1,5 +1,3 @@
 /classes/
-pokeFrogs.drjava
-pokeFrogs.drjava
-/classes/*.java~
+*.java~
 *.drjava
