@@ -1,12 +1,10 @@
 import java.util.Scanner;
-import java.util.ArrayList;
 import java.lang.Math;
 import java.io.FileOutputStream;
 import java.io.FileInputStream;
 import java.io.ObjectOutputStream;
 import java.io.ObjectInputStream;
 import java.io.*;
-import java.util.*;
 
 public class Main {
   

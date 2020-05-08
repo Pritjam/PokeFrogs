@@ -1,4 +1,4 @@
-import java.lang.Math;
+
 
 public class Parser {
 
@@ -25,7 +25,6 @@ public class Parser {
   public int[] getIntArgs(String input) {
     String[] tokens = input.split(" ");
     int[] args = new int[tokens.length - 1];
-    String command = tokens[0].toUpperCase();
     for (int i = 1; i < tokens.length; i++) {
       args[i-1] = Integer.parseInt(tokens[i]);
     }
