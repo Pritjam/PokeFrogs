@@ -1,52 +1,44 @@
 import java.util.Scanner;
 import java.lang.Math;
-import java.io.FileOutputStream;
-import java.io.FileInputStream;
-import java.io.ObjectOutputStream;
-import java.io.ObjectInputStream;
 import java.io.*;
 
 public class Main {
   
-  //here we go---THIS IS A COMMENT 
-  public static void main(String[] args) throws IOException, FileNotFoundException, ClassNotFoundException {
+  //here we go
+  public static void main(String[] args) throws ClassNotFoundException, IOException {
     Scanner scan = new Scanner(System.in);
-    
-    PunnetMixer mendel = new PunnetMixer();
-    FroggyDex dex = new FroggyDex();
-    Megabox boxes = new Megabox();
+	PunnetMixer mendel = new PunnetMixer();
     Parser parser = new Parser();
-    int money = 50;
-    int currentBox = 0;
-    int feed = 20;
+    
+    GameState state = new GameState();
     
     int randomThree = (int)(Math.random() * 3);
     for (int i = 0; i < 4; i++) {
       if (i != randomThree) {
-        boxes.addFrog(new Frog(i), 0);
+        state.boxes.addFrog(new Frog(i), 0);
       }
     }
     
     System.out.println("Welcome to PokeFrogs! You are a frog breeder who specializes in multicolored frogs.\nYour frogs have 2 attributes: a base color, and an accent color.\nYou can breed these frogs to create new color combinations.\nYou have 10 habitats for your frogs to live in.\nGet help at any time by typing the command \"Help\". Have fun!");
     for (int i = 0; i < 3; i++) {
-      String[] phenotype = boxes.getFrog(currentBox, i).getPhenotype();
-      dex.achieveFrog(phenotype);
+      String[] phenotype = state.boxes.getFrog(state.currentBox, i).getPhenotype();
+      state.dex.achieveFrog(phenotype);
     }
     String input;
     String command;
     
     //main game loop========================================================
     while (true) {
-      System.out.print("Money: " + money + "      Feed: " + feed + "\nInput a command...\n>>");
+      System.out.print("Money: " + state.money + "      Feed: " + state.feed + "\nInput a command...\n>>");
       input = scan.nextLine();
       command = parser.getCommand(input);
       
       switch (command) {
         case "MOVE":
           try {
-          Frog tempFrog = boxes.remove(currentBox, parser.getIntArgs(input)[0]);
+          Frog tempFrog = state.boxes.remove(state.currentBox, parser.getIntArgs(input)[0]);
           try {
-            boxes.addFrog(tempFrog, parser.getIntArgs(input)[1]);
+        	  state.boxes.addFrog(tempFrog, parser.getIntArgs(input)[1]);
           } catch (IndexOutOfBoundsException e) {
             System.out.println("That box doesn't exist! There are 10 boxes, labeled 0-9.");
           }
@@ -57,13 +49,13 @@ public class Main {
         
         case "BREED":
           try {
-          Frog frog1 = boxes.getFrog(currentBox, parser.getIntArgs(input)[0]);
-          Frog frog2 = boxes.getFrog(currentBox, parser.getIntArgs(input)[1]);
+          Frog frog1 = state.boxes.getFrog(state.currentBox, parser.getIntArgs(input)[0]);
+          Frog frog2 = state.boxes.getFrog(state.currentBox, parser.getIntArgs(input)[1]);
           if (frog1.getMaturity() == 3 && frog2.getMaturity() == 3) {
             Frog newFrog = mendel.cross(frog1, frog2);
-            boxes.addFrog(newFrog, currentBox);
+            state.boxes.addFrog(newFrog, state.currentBox);
             String[] phenotype = newFrog.getPhenotype();
-            dex.achieveFrog(phenotype);
+            state.dex.achieveFrog(phenotype);
             System.out.println("Frog " + parser.getIntArgs(input)[0] + " bred with frog " + parser.getIntArgs(input)[1] + " to produce a new frog!");
           } else {
             System.out.println("Frogs need to be fully grown (Maturity 3) to breed!");
@@ -74,14 +66,13 @@ public class Main {
         break;
         
         case "VIEW":
-          System.out.println("Current Box: " + currentBox);
-          for (int i = 0; i < boxes.getBoxSize(currentBox); i++) {
-            System.out.print(i + ": " + boxes.getFrog(currentBox, i).getPhenotype()[0] + ", Maturity: " + boxes.getFrog(currentBox, i).getMaturity());
-            if (boxes.getFrog(currentBox, i).getShiny()) {
-              System.out.println(" * ");
-            } else {
-              System.out.println();
+          System.out.println("Current Box: " + state.currentBox);
+          for (int i = 0; i < state.boxes.getBoxSize(state.currentBox); i++) {
+            System.out.print(i + state.boxes.getFrog(state.currentBox, i).toString());
+            if (state.boxes.getFrog(state.currentBox, i).getShiny()) {
+              System.out.print(" * ");
             }
+              System.out.println();
           }
           break;
           
@@ -91,7 +82,7 @@ public class Main {
           break;
           
         case "FROGGYDEX":
-          System.out.println(dex.frogsToString());
+          System.out.println(state.dex.frogsToString());
           break;
           
         case "FEED":
@@ -99,7 +90,7 @@ public class Main {
           if (parser.getIntArgs(input)[0] != -1) {
             frogToFeed = parser.getIntArgs(input)[0];
           }
-          if (feed > 0 && !boxes.getFrog(currentBox, frogToFeed).feed()) {
+          if (state.feed > 0 && !state.boxes.getFrog(state.currentBox, frogToFeed).feed()) {
             System.out.println(":yum:, feed frog " + parser.getIntArgs(input)[0] + " and increased its maturity by 1");
             
           } else {
@@ -108,10 +99,10 @@ public class Main {
           break;
           
         case "RELEASE":
-          if (parser.getIntArgs(input)[0] < boxes.getBoxSize(currentBox)) {
+          if (parser.getIntArgs(input)[0] < state.boxes.getBoxSize(state.currentBox)) {
           System.out.println("Are you sure? (Y/N)");
           if (scan.nextLine().toUpperCase().equals("Y")) {
-            boxes.remove(currentBox, parser.getIntArgs(input)[0]);
+        	  state.boxes.remove(state.currentBox, parser.getIntArgs(input)[0]);
             System.out.println("Done.");
           } else {
             System.out.println("Release Cancelled.");
@@ -122,38 +113,23 @@ public class Main {
         break;
         
         case "SWITCH":
-          currentBox = parser.getIntArgs(input)[0];
+        	state.currentBox = parser.getIntArgs(input)[0];
           System.out.println("Switched to box " + parser.getIntArgs(input)[0]);
           break;
           
         case "SAVE":
-          dex.saveSystemVars(money, feed);
+        	state.dex.saveSystemVars(state.money, state.feed);
           System.out.println("Saving...");
           System.out.println("Please input the save name.");
           String saveOutPath = scan.nextLine();
-          FileOutputStream fileStream = new FileOutputStream("saves/" + saveOutPath.toUpperCase() + ".sav");
-          ObjectOutputStream objectStream = new ObjectOutputStream(fileStream);
-          objectStream.writeObject(dex);
-          objectStream.writeObject(boxes);
-          objectStream.close();
-          System.out.println("Saved Successfully as \"" + saveOutPath + "\"");
+          state.save(saveOutPath);
+          
           break;
           
         case "LOAD":
           System.out.println("Please type in your save name.");
           String savePath = scan.nextLine();
-          try {
-            FileInputStream fileIn = new FileInputStream("saves/" + savePath.toUpperCase() + ".sav");
-            ObjectInputStream ois = new ObjectInputStream(fileIn);
-            dex = (FroggyDex) ois.readObject(); //deserialize the array
-            boxes = (Megabox) ois.readObject();
-            ois.close();
-            money = dex.systemVars[0];
-            feed = dex.systemVars[1];
-            System.out.println("Loaded Successfully!");
-          } catch (FileNotFoundException e) {
-            System.out.println("No such save exists! Check the \"saves\" folder in the game directory.");
-          }
+          state.load(savePath);
           break;
           
         case "SHOP":
@@ -162,11 +138,11 @@ public class Main {
           String choice = scan.nextLine().toUpperCase();
           switch (choice) {
             case "FEED":
-              System.out.print("How much? Grain feed costs 2 money each. You have " + money + " money.\n>>");
+              System.out.print("How much? Grain feed costs 2 money each. You have " + state.money + " money.\n>>");
               int grain = scan.nextInt();
-              if (money > grain * 2) {
-                money -= grain * 2;
-                feed += grain;
+              if (state.money > grain * 2) {
+            	  state.money -= grain * 2;
+            	  state.feed += grain;
                 System.out.println("Pleasure doing business with you! Back to the main menu.");
               } else {
                 System.out.println("Not enough money! Back to the main menu.");
@@ -182,9 +158,9 @@ public class Main {
                 int cost = Constants.prices[phenoView[0]] * Constants.prices[phenoView[1]];
                 
                 System.out.println("That will cost " + cost + " money. Proceed to buy? (Y/N)");
-                if (cost < money && scan.nextLine().toUpperCase().equals("Y")) {
-                  money -= cost;
-                  boxes.addFrog(new Frog(phenoReal), currentBox);
+                if (cost < state.money && scan.nextLine().toUpperCase().equals("Y")) {
+                	state.money -= cost;
+                	state.boxes.addFrog(new Frog(phenoReal), state.currentBox);
                 } else {
                   System.out.println("Ok, back to main menu!");
                 }

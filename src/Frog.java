@@ -101,4 +101,12 @@ public class Frog implements Serializable {
   public boolean getShiny() {
     return this.shiny;
   }
+  
+  public String toString() {
+	  String str = ": ";
+	  str += this.getPhenotype()[0];
+	  str += " Maturity: ";
+	  str += maturity;
+	  return str;
+  }
 }
