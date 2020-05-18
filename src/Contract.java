@@ -1,23 +1,22 @@
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Quest implements Serializable {
+public class Contract implements Serializable {
 	ArrayList<Frog> goal;
-	
-	public Quest(ArrayList<Frog> target) {
+
+	public Contract(ArrayList<Frog> target) {
 		this.goal = target;
 	}
-	
+
 	public boolean giveFrog(Frog tribute) {
-		if(goal.indexOf(tribute) != 0) {
+		if (goal.indexOf(tribute) != -1) {
 			goal.remove(tribute);
 			return true;
-		}
-		else {
+		} else {
 			return false;
 		}
 	}
-	
+
 	public boolean isComplete() {
 		return (goal.size() == 0);
 	}
@@ -25,7 +24,7 @@ public class Quest implements Serializable {
 	public String toString() {
 		String str = "";
 		str += "Frogs Remaining:" + goal.size();
-		for (int i = 0; i < goal.size(); i ++) {
+		for (int i = 0; i < goal.size(); i++) {
 			str += i + goal.get(i).toString();
 		}
 		return str;
