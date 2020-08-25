@@ -11,9 +11,9 @@ public class Constants {
     {"RED", "YLW", "BLU", "GLS", "WHT"}
   };
   
-  public static final ArrayList<String> colorsList = new ArrayList<String>( Arrays.asList(
-    "RED", "ORN", "YLW", "GRN", "BLU", "PRP", "WHT", "BLK", "GLS") );
-  //  3      5      3      5      3      5      7      2      9
+  public static final ArrayList<String> colorsList = new ArrayList<String>( 
+    Arrays.asList("RED", "ORN", "YLW", "GRN", "BLU", "PRP", "WHT", "BLK", "GLS"));
+                //  3      5      3      5      3      5      7      2      9
   public static final int[] prices = {
     3, 5, 3, 5, 3, 5, 7, 2, 9};
   
